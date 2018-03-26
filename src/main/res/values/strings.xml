@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">LCPlatform</string>
+    <string name="search">Search</string>
+    <string name="account">Account</string>
+    <string name="setting">Setting</string>
+    <string name="title_activity_home">Home</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string-array name="majors">
+        <item>全部</item>
+        <item>哲学</item>
+        <item>经济学</item>
+        <item>法学</item>
+        <item>教育学</item>
+        <item>文学</item>
+        <item>历史学</item>
+        <item>理学</item>
+        <item>工学</item>
+        <item>农学</item>
+        <item>医学</item>
+        <item>军事学</item>
+        <item>管理学</item>
+    </string-array>
+    <string-array name="user_type">
+        <item>学生</item>
+        <item>教师</item>
+        <item>管理员</item>
+    </string-array>
+    <string-array name="user_sex">
+        <item>男</item>
+        <item>女</item>
+    </string-array>
+</resources>
