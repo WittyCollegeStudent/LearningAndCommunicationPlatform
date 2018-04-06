@@ -21,7 +21,7 @@ import com.squareup.okhttp.Response;
 import com.weianyang.learningplatform.R;
 import com.weianyang.learningplatform.adapter.AnswerBriefAdapter;
 import com.weianyang.learningplatform.entity.AnswerView;
-import com.weianyang.learningplatform.entity.Question;
+import com.weianyang.learningplatform.entity.QuestionView;
 import com.weianyang.learningplatform.tool.HttpUtil;
 
 import java.io.IOException;
@@ -32,14 +32,14 @@ import java.util.List;
 public class AnswerBriefActivity extends AppCompatActivity {
 
     private static final String TAG = "AnswerBriefActivity";
-    private Question curr_qs;//当前的问题
+    private QuestionView curr_qs;//当前的问题
     private List<AnswerView> answerViewList = new ArrayList<>();//当前问题的回答列表
     private RecyclerView recyclerViewAnswerBrief;
     private AnswerBriefAdapter answerBriefAdapter;//回答概要适配器
 
-    public static void actionStart(Context context, Question question) {
+    public static void actionStart(Context context, QuestionView questionView) {
         Intent intent = new Intent(context, AnswerBriefActivity.class);
-        intent.putExtra(Question.FLAG_QUESTION, question);
+        intent.putExtra(QuestionView.FLAG_QUESTION, questionView);
         context.startActivity(intent);
     }
 
@@ -48,7 +48,7 @@ public class AnswerBriefActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_answer_brief);
         Intent intent = getIntent();
-        curr_qs = (Question) intent.getSerializableExtra(Question.FLAG_QUESTION);
+        curr_qs = (QuestionView) intent.getSerializableExtra(QuestionView.FLAG_QUESTION);
         Toolbar toolbar = findViewById(R.id.toolbar_answer_list);
         toolbar.setTitle(curr_qs.getQname());//设置标题
         toolbar.setTitleMarginEnd(100);
@@ -102,8 +102,8 @@ public class AnswerBriefActivity extends AppCompatActivity {
     });
 
     /*
-    * 根据问题id获取其对应的所有回答
-    * */
+     * 根据问题id获取其对应的所有回答
+     * */
     public void initAnswerViews(final int qid) {
         new Thread() {
             @Override
@@ -113,7 +113,7 @@ public class AnswerBriefActivity extends AppCompatActivity {
                 // 02.请求体
                 Request request = new Request.Builder()
                         .get()//get请求方式
-                        .url(HttpUtil.URL_ANSWER_SERVLET + "?qid=" + qid)//网址
+                        .url(HttpUtil.URL_GET_ANSWER_VIEW_SERVLET + "?qid=" + qid)//网址
                         .build();
                 Response response = null;
                 try {
@@ -129,7 +129,6 @@ public class AnswerBriefActivity extends AppCompatActivity {
                         Type type = new TypeToken<List<AnswerView>>() {
                         }.getType();
                         List<AnswerView> questionBeanList = gson.fromJson(response.body().string(), type);
-
                         msg.what = HttpUtil.GET_DATA_SUCCESS;
                         msg.obj = questionBeanList;
                     }

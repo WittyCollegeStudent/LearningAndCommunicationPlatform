@@ -6,10 +6,11 @@ import java.io.Serializable;
  * Created by weianyang on 18-2-27.
  */
 
-public class Question implements Serializable{
+public class QuestionView implements Serializable{
 
     public static String FLAG_QUESTION = "QUESTION";
     public static String FLAG_QUESTION_NAME = "QUESTION_NAME";
+    public static final String VIEW_NAME = "QuestionView";
 
     private int id;//编号
     private String qname;//问题名称
@@ -92,7 +93,7 @@ public class Question implements Serializable{
         this.count = count;
     }
 
-    public Question(int id, String qname, String qcontent, String publisher, String major, String pubdate,String isvisible, int count) {
+    public QuestionView(int id, String qname, String qcontent, String publisher, String major, String pubdate, String isvisible, int count) {
 
         this.id = id;
         this.qname = qname;
@@ -104,7 +105,7 @@ public class Question implements Serializable{
         this.count = count;
     }
 
-    public Question() {
+    public QuestionView() {
 
     }
 

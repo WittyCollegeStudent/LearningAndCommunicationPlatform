@@ -28,7 +28,7 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 import com.weianyang.learningplatform.R;
 import com.weianyang.learningplatform.adapter.QsBriefAdapter;
-import com.weianyang.learningplatform.entity.Question;
+import com.weianyang.learningplatform.entity.QuestionView;
 import com.weianyang.learningplatform.tool.HttpUtil;
 
 import java.io.IOException;
@@ -43,10 +43,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private AppCompatSpinner spinner;
     private FloatingActionButton fabAddQS;//新增问题
     private ArrayAdapter<CharSequence> majorAdapter;//专业
-    private List<Question> questionList = new ArrayList<>();//问题列表
+    private List<QuestionView> questionViewList = new ArrayList<>();//问题列表
     private SearchView searchView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private QsBriefAdapter qsBriefAdapter;//问题适配器
+    private String currMajor = "全部";//当前专业
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,22 +65,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         majorAdapter = ArrayAdapter.createFromResource(MainActivity.this
                 , R.array.majors, R.layout.support_simple_spinner_dropdown_item);
         spinner.setAdapter(majorAdapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                TextView textView = (TextView) view;
-                textView.setTextColor(getResources().getColor(R.color.white));//设置标题栏的字体颜色
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
         RecyclerView recyclerView_qs_brief = findViewById(R.id.recyclerview_qs_brief);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView_qs_brief.setLayoutManager(linearLayoutManager);
         recyclerView_qs_brief.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));//设置分隔线
-        qsBriefAdapter = new QsBriefAdapter(MainActivity.this, questionList);
+        qsBriefAdapter = new QsBriefAdapter(MainActivity.this, questionViewList);
         recyclerView_qs_brief.setAdapter(qsBriefAdapter);
         //刷新问题概要
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -88,13 +78,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        refreshQuestions();
+                        refreshQuestions(null, null);
                     }
                 }).start();
             }
         });
-        //问题概要
-        refreshQuestions();
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                TextView textView = (TextView) view;
+                Log.d(TAG, "onItemSelected: " + ((TextView) view).getText().toString());
+                textView.setTextColor(getResources().getColor(R.color.white));//设置标题栏的字体颜色
+                //刷新问题概要
+                String major = textView.getText().toString();
+                if (!major.equals("全部")) {
+                    refreshQuestions(null, major);
+                } else {
+                    refreshQuestions(null, null);
+                }
+                //标记选择的专业
+                currMajor = major;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //刷新问题概要
+        refreshQuestions(null, null);
     }
 
     //消息处理者,创建一个Handler的子类对象,目的是重写Handler的处理消息的方法(handleMessage())
@@ -105,18 +122,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             switch (msg.what) {
                 //请求成功，则刷新页面
                 case HttpUtil.GET_DATA_SUCCESS:
-                    questionList.clear();
-                    List<Question> questions = (List<Question>) msg.obj;//从网络上获取到的问题列表
+                    questionViewList.clear();
+                    List<QuestionView> questionViews = (List<QuestionView>) msg.obj;//从网络上获取到的问题列表
                     //全部放到将要显示的问题列表中
-                    for (Question question : questions) {
-                        questionList.add(question);
+                    for (QuestionView questionView : questionViews) {
+                        questionViewList.add(questionView);
                     }
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             qsBriefAdapter.notifyDataSetChanged();
-                            if (swipeRefreshLayout.isRefreshing())
+                            if (swipeRefreshLayout.isRefreshing()) {
                                 swipeRefreshLayout.setRefreshing(false);
+                            }
                         }
                     });
                     break;
@@ -125,6 +143,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            if (swipeRefreshLayout.isRefreshing()) {
+                                swipeRefreshLayout.setRefreshing(false);
+                            }
                             Toast.makeText(MainActivity.this, "获取数据失败，请检查网络", Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -136,19 +157,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     });
 
-    /*
-    * 初始化问题
-    * */
-    public void refreshQuestions() {
+    /**
+     * 向服务器发起请求，刷新问题
+     */
+    public void refreshQuestions(final String qName, final String major) {
         new Thread() {
             @Override
             public void run() {
                 // 01. 定义okhttp
                 OkHttpClient okHttpClient_get = new OkHttpClient();
                 // 02.请求体
+                StringBuilder params = new StringBuilder("?qName=");
+                //添加查询参数：问题名称、专业
+                if (qName != null) {
+                    params.append(qName);
+                }
+                if (major != null && !major.equals("全部")) {
+                    params.append("&major=" + major);
+                }
                 Request request = new Request.Builder()
+                        .url(HttpUtil.URL_GET_QUESTION_VIEW_SERVLET + params.toString())//网址
                         .get()//get请求方式
-                        .url(HttpUtil.URL_QUESTION_SERVLET)//网址
                         .build();
                 Response response = null;
                 try {
@@ -161,12 +190,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         msg.what = HttpUtil.GET_DATA_FAILURE;
                     } else {
                         //成功
-                        Type type = new TypeToken<List<Question>>() {
+                        Type type = new TypeToken<List<QuestionView>>() {
                         }.getType();
-                        List<Question> questionBeanList = gson.fromJson(response.body().string(), type);
-
+                        List<QuestionView> questionViewBeanList = gson.fromJson(response.body().string(), type);
                         msg.what = HttpUtil.GET_DATA_SUCCESS;
-                        msg.obj = questionBeanList;
+                        msg.obj = questionViewBeanList;
                     }
                     refreshHandler.dispatchMessage(msg);
                 } catch (IOException e) {
@@ -182,11 +210,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_toolbar, menu);
         MenuItem searchItem = menu.findItem(R.id.search);
-        SearchView searchView = (SearchView) searchItem.getActionView();
+        final SearchView searchView = (SearchView) searchItem.getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Toast.makeText(MainActivity.this, "onQuerySubmit", Toast.LENGTH_SHORT).show();
+                //点击查询按钮
+                refreshQuestions(searchView.getQuery().toString(), null);
                 return true;
             }
 

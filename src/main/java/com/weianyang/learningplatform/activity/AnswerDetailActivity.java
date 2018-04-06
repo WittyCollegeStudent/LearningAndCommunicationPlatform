@@ -9,15 +9,14 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.weianyang.learningplatform.R;
-import com.weianyang.learningplatform.entity.Answer;
 import com.weianyang.learningplatform.entity.AnswerView;
-import com.weianyang.learningplatform.entity.Question;
+import com.weianyang.learningplatform.entity.QuestionView;
 
 public class AnswerDetailActivity extends AppCompatActivity {
 
     public static void actionStart(Context context, String qsName, AnswerView answerView) {
         Intent intent = new Intent(context, AnswerDetailActivity.class);
-        intent.putExtra(Question.FLAG_QUESTION_NAME, qsName);
+        intent.putExtra(QuestionView.FLAG_QUESTION_NAME, qsName);
         intent.putExtra(AnswerView.FLAG_ANSWER_VIEW, answerView);
         context.startActivity(intent);
     }
@@ -35,9 +34,10 @@ public class AnswerDetailActivity extends AppCompatActivity {
         answerContent = findViewById(R.id.text_answer_detail_content);
         answerDate = findViewById(R.id.answer_detail_date);
         Intent intent = getIntent();
-        String qsName = (String) intent.getSerializableExtra(Question.FLAG_QUESTION_NAME);//问题名称
+        String qsName = (String) intent.getSerializableExtra(QuestionView.FLAG_QUESTION_NAME);//问题名称
         AnswerView answerView = (AnswerView) intent.getSerializableExtra(AnswerView.FLAG_ANSWER_VIEW);
         toolbar.setTitle(qsName);//工具栏标题设置为问题名称
+        toolbar.setTitleMarginEnd(100);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         respondant.setText(answerView.getRespondant());         //设置问题回复者
