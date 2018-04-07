@@ -16,10 +16,23 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
     </android.support.v7.widget.Toolbar>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerview_answer_brief"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerview_answer_brief"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_add_answer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/ic_add_white"
+            android:layout_margin="16dp"/>
+    </RelativeLayout>
+
 
 </LinearLayout>

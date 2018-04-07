@@ -5,14 +5,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.squareup.okhttp.OkHttpClient;
@@ -29,13 +30,14 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AnswerBriefActivity extends AppCompatActivity {
+public class AnswerBriefActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "AnswerBriefActivity";
     private QuestionView curr_qs;//当前的问题
     private List<AnswerView> answerViewList = new ArrayList<>();//当前问题的回答列表
     private RecyclerView recyclerViewAnswerBrief;
     private AnswerBriefAdapter answerBriefAdapter;//回答概要适配器
+    private FloatingActionButton fabAddAns;//新增回答
 
     public static void actionStart(Context context, QuestionView questionView) {
         Intent intent = new Intent(context, AnswerBriefActivity.class);
@@ -55,7 +57,9 @@ public class AnswerBriefActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         recyclerViewAnswerBrief = findViewById(R.id.recyclerview_answer_brief);
-        initAnswerViews(curr_qs.getId());//获取所有问题
+        fabAddAns = findViewById(R.id.fab_add_answer);
+        fabAddAns.setOnClickListener(this);
+
         answerBriefAdapter = new AnswerBriefAdapter(AnswerBriefActivity.this
                 , curr_qs, answerViewList);
         LinearLayoutManager layoutManager = new LinearLayoutManager(AnswerBriefActivity.this);
@@ -63,7 +67,18 @@ public class AnswerBriefActivity extends AppCompatActivity {
         recyclerViewAnswerBrief.setAdapter(answerBriefAdapter);
     }
 
-    //消息处理者,创建一个Handler的子类对象,目的是重写Handler的处理消息的方法(handleMessage())
+    /**
+     * 刷新问题
+     * */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refreshAnswerViews(curr_qs.getId());//获取所有问题
+    }
+
+    /**
+     * 消息处理者,创建一个Handler的子类对象,目的是重写Handler的处理消息的方法(handleMessage())
+     */
     private Handler refreshHandler = new Handler(new Handler.Callback() {
 
         @Override
@@ -101,10 +116,10 @@ public class AnswerBriefActivity extends AppCompatActivity {
         }
     });
 
-    /*
+    /**
      * 根据问题id获取其对应的所有回答
-     * */
-    public void initAnswerViews(final int qid) {
+     */
+    public void refreshAnswerViews(final int qid) {
         new Thread() {
             @Override
             public void run() {
@@ -152,5 +167,14 @@ public class AnswerBriefActivity extends AppCompatActivity {
                 break;
         }
         return true;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.fab_add_answer:
+                AnswerAddActivity.actionStart(AnswerBriefActivity.this, curr_qs);
+                break;
+        }
     }
 }

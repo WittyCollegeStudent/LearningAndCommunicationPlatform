@@ -87,17 +87,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 TextView textView = (TextView) view;
-                Log.d(TAG, "onItemSelected: " + ((TextView) view).getText().toString());
-                textView.setTextColor(getResources().getColor(R.color.white));//设置标题栏的字体颜色
-                //刷新问题概要
-                String major = textView.getText().toString();
-                if (!major.equals("全部")) {
-                    refreshQuestions(null, major);
-                } else {
-                    refreshQuestions(null, null);
+                ((TextView)(parent.getChildAt(0))).setTextColor(getResources().getColor(R.color.white));//设置标题栏的字体颜色
+                if(textView != null){
+                    //刷新问题概要
+                    String major = textView.getText().toString();
+                    if (!major.equals("全部")) {
+                        refreshQuestions(null, major);
+                    } else {
+                        refreshQuestions(null, null);
+                    }
+                    //标记选择的专业
+                    currMajor = major;
                 }
-                //标记选择的专业
-                currMajor = major;
             }
 
             @Override
@@ -214,6 +215,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                Log.e("onQueryTextSubmit","我是点击回车按钮");
                 //点击查询按钮
                 refreshQuestions(searchView.getQuery().toString(), null);
                 return true;
@@ -221,6 +223,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                if(newText.equals("")){
+                    this.onQueryTextSubmit("");
+                    return true;
+                }
                 return false;
             }
         });

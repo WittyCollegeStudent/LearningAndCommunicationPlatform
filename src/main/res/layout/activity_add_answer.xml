@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.weianyang.learningplatform.activity.MainActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_add_answer"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+    </android.support.v7.widget.Toolbar>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_margin="12dp"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:text="问题名称:"/>
+
+            <TextView
+                android:id="@+id/text_qs_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="18sp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:focusable="false"/>
+        </LinearLayout>
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/input_add_anscontent"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.78"
+            android:layout_marginTop="8dp"
+            android:gravity="top"
+            android:enabled="true"
+            android:hint="请输入评论信息"
+            android:scrollbars="vertical"
+            android:background="@drawable/input_text" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.22">
+            <Button
+                android:id="@+id/button_add_answer"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="添加此回答"/>
+        </RelativeLayout>
+    </LinearLayout>
+
+</android.support.v7.widget.LinearLayoutCompat>

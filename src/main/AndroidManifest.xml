@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.weianyang.learningplatform">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".tool.LCPApplication"
         android:allowBackup="false"
@@ -11,9 +12,9 @@
         android:label="@string/app_name"
         android:launchMode="singleTask"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:windowSoftInputMode="stateHidden|stateUnchanged"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:windowSoftInputMode="stateHidden|stateUnchanged"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:allowBackup">
         <activity android:name=".activity.MainActivity">
@@ -42,6 +43,9 @@
         <activity
             android:name=".activity.AnswerDetailActivity"
             android:label="回复详情" />
+        <activity
+            android:name=".activity.AnswerAddActivity"
+            android:label="添加评论" />
     </application>
 
 </manifest>
