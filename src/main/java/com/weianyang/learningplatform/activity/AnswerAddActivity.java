@@ -2,6 +2,7 @@ package com.weianyang.learningplatform.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -153,6 +154,12 @@ public class AnswerAddActivity extends AppCompatActivity implements View.OnClick
             case R.id.button_add_answer:
                 //防止点击过快，重复执行逻辑
                 if (!ClickUtil.isFastClick()) {
+                    SharedPreferences pref = getSharedPreferences("shared", Context.MODE_PRIVATE);
+                    //若未登录,则跳转到登录界面
+                    if (!pref.getBoolean("login", false)){
+                        LoginActivity.actionStart(AnswerAddActivity.this);
+                        break;
+                    }
                     new Thread() {
                         @Override
                         public void run() {

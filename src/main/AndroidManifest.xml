@@ -46,6 +46,9 @@
         <activity
             android:name=".activity.AnswerAddActivity"
             android:label="添加评论" />
+        <activity
+            android:name=".activity.UserInfoActivity"
+            android:label="用户详情" />
     </application>
 
 </manifest>

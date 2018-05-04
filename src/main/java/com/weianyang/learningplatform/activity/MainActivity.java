@@ -1,5 +1,7 @@
 package com.weianyang.learningplatform.activity;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -48,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private SwipeRefreshLayout swipeRefreshLayout;
     private QsBriefAdapter qsBriefAdapter;//问题适配器
     private String currMajor = "全部";//当前专业
+    private SharedPreferences pref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fabAddQS = findViewById(R.id.fab_add_qs);
         searchView = findViewById(R.id.search);
         swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
+        pref = getSharedPreferences("shared", Context.MODE_PRIVATE);
         fabAddQS.setOnClickListener(this);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);//隐藏活动标题
@@ -237,7 +241,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.account:
-                LoginActivity.actionStart(MainActivity.this);
+                //登录成功则进入个人信息界面
+                if(pref.getBoolean("login", false)){
+                    UserInfoActivity.actionStart(MainActivity.this);
+                }else{
+                    //进入登录界面
+                    LoginActivity.actionStart(MainActivity.this);
+                }
                 break;
             case R.id.setting:
                 SettingsActivity.actionStart(MainActivity.this);

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">学习交流平台</string>
+    <string name="app_name">解惑</string>
     <string name="search">搜索</string>
     <string name="account">个人信息</string>
     <string name="setting">设置</string>

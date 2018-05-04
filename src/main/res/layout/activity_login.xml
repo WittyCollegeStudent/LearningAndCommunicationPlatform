@@ -42,7 +42,7 @@
             android:hint="请输入密码"
             android:inputType="textPassword" />
         <Button
-            android:id="@+id/button_add_qs"
+            android:id="@+id/button_login"
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

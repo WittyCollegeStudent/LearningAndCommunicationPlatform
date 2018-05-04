@@ -21,8 +21,8 @@ configurations.all {
     }
 }
 
-allprojects{
-    repositories{
+allprojects {
+    repositories {
         jcenter()
         maven {
             url "https://jitpack.io"
