@@ -2,6 +2,7 @@ package com.weianyang.learningplatform.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -110,6 +111,7 @@ public class QuestionAddActivity extends AppCompatActivity implements View.OnCli
                 default:
                     break;
             }
+            ClickUtil.switchButtonClickable(btn_add_qs);
             return false;
         }
     });
@@ -170,6 +172,7 @@ public class QuestionAddActivity extends AppCompatActivity implements View.OnCli
             case R.id.button_add_qs:
                 //防止点击过快，重复执行逻辑
                 if (!ClickUtil.isFastClick()) {
+                    ClickUtil.switchButtonClickable(btn_add_qs);
                     new Thread() {
                         @Override
                         public void run() {
@@ -183,8 +186,18 @@ public class QuestionAddActivity extends AppCompatActivity implements View.OnCli
                                 toastOnUIThread("问题内容不能为空，且不能超过9000");
                             } else {
                                 //输入合法，则提交问题
-                                //TODO:获取当前用户id
-                                int publisher = 1;
+                                //获取当前用户id
+                                SharedPreferences pref = getSharedPreferences("shared", Context.MODE_PRIVATE);
+                                boolean login = pref.getBoolean("login", false);
+                                int publisher = pref.getInt("id", -1);
+                                if(!login || publisher < 0){
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            LoginActivity.actionStart(QuestionAddActivity.this);
+                                        }
+                                    });
+                                }
                                 //提交的参数
                                 String params = "qname=" + qs_name + "&qcontent=" + qs_content + "&publisher=" + publisher
                                         + "&major=" + majorId + "&isvisible=" + "1";
@@ -221,8 +234,8 @@ public class QuestionAddActivity extends AppCompatActivity implements View.OnCli
                         }
                     }.start();
                 }
-
                 break;
+            default:break;
         }
     }
 }

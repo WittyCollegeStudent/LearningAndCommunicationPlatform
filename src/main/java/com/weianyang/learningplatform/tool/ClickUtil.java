@@ -1,5 +1,7 @@
 package com.weianyang.learningplatform.tool;
 
+import android.widget.Button;
+
 public class ClickUtil {
 
     // 两次点击按钮之间的点击间隔不能少于3000毫秒
@@ -14,6 +16,14 @@ public class ClickUtil {
         }
         lastClickTime = curClickTime;
         return flag;
+    }
+
+    public static void switchButtonClickable(Button button){
+        if(button.isClickable()){
+            button.setClickable(false);
+        }else{
+            button.setClickable(true);
+        }
     }
 
 }

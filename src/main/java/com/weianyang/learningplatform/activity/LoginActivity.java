@@ -4,11 +4,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -16,7 +15,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.squareup.okhttp.OkHttpClient;
@@ -71,15 +69,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             JSONObject jsonObject = (JSONObject) msg.obj;//从网络上获取到的回答列表
             boolean loginSuccess = false;//是否登录成功
             int id = -1;//用户id
+            String userType = "";
             try {
                 loginSuccess = Boolean.parseBoolean(jsonObject.getString("success"));
                 if(loginSuccess){
                     id = Integer.parseInt(jsonObject.getString("id"));
+                    userType = jsonObject.getString("type");
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
             final boolean login = loginSuccess;
+            final String usertype = userType;
             saveLoginStatus(loginSuccess);
             saveUserId(id);
             switch (msg.what) {
@@ -92,6 +93,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 //如果登录失败则弹出提示
                                 AlertUtil.alert(LoginActivity.this,"登录失败", "请检查用户名密码", null);
                             }else{
+                                saveUserType(usertype);
                                 AlertUtil.alert(LoginActivity.this,"登录成功", "", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
@@ -143,7 +145,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 Response response = null;
                 try {
                     response = okHttpClient_get.newCall(request).execute();
-                    Gson gson = new Gson();
                     Message msg = new Message();
                     //请求不成功
                     Log.d(TAG, "response.code = " + response.code());
@@ -169,6 +170,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         }.start();
 
+    }
+
+    /**
+     * 保存用户类型
+     * @param usertype
+     */
+    private void saveUserType(String usertype){
+        editor = pref.edit();
+        editor.putString("usertype", usertype);
+        editor.apply();
     }
 
     @Override

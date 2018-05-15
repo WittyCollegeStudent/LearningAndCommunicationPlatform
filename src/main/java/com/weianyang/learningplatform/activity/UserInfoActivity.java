@@ -78,6 +78,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                 finish();
                 LoginActivity.actionStart(UserInfoActivity.this);
                 break;
+            default:break;
         }
     }
 
@@ -166,7 +167,6 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                 Response response = null;
                 try {
                     response = okHttpClient_get.newCall(request).execute();
-                    Gson gson = new Gson();
                     Message msg = new Message();
                     //请求不成功
                     if (response.code() != 200) {

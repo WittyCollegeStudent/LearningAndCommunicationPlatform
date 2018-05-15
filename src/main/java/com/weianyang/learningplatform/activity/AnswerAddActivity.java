@@ -107,6 +107,7 @@ public class AnswerAddActivity extends AppCompatActivity implements View.OnClick
                 default:
                     break;
             }
+            ClickUtil.switchButtonClickable(button_add_answer);
             return false;
         }
     });
@@ -152,6 +153,7 @@ public class AnswerAddActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button_add_answer:
+                ClickUtil.switchButtonClickable(button_add_answer);
                 //防止点击过快，重复执行逻辑
                 if (!ClickUtil.isFastClick()) {
                     SharedPreferences pref = getSharedPreferences("shared", Context.MODE_PRIVATE);
@@ -168,8 +170,18 @@ public class AnswerAddActivity extends AppCompatActivity implements View.OnClick
                                 toastOnUIThread("问题内容不能为空，且不能超过20000");
                             } else {
                                 //输入合法，则提交问题
-                                //TODO:获取当前用户id
-                                int respondant = 1;
+                                //获取当前用户id
+                                SharedPreferences pref = getSharedPreferences("shared", Context.MODE_PRIVATE);
+                                boolean login = pref.getBoolean("login", false);
+                                int respondant = pref.getInt("id", -1);
+                                if(!login || respondant < 0){
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            LoginActivity.actionStart(AnswerAddActivity.this);
+                                        }
+                                    });
+                                }
                                 //提交的参数
                                 String params = "qid=" + currQs.getId() + "&anscontent=" + anscontent + "&respondant="
                                         + respondant;
@@ -207,6 +219,7 @@ public class AnswerAddActivity extends AppCompatActivity implements View.OnClick
                     }.start();
                 }
                 break;
+                default:break;
         }
     }
 }

@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private FloatingActionButton fabAddQS;//新增问题
     private ArrayAdapter<CharSequence> majorAdapter;//专业
     private List<QuestionView> questionViewList = new ArrayList<>();//问题列表
-    private SearchView searchView;
+//    private SearchView searchView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private QsBriefAdapter qsBriefAdapter;//问题适配器
     private String currMajor = "全部";//当前专业
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         toolbar = findViewById(R.id.toolbar_main);
         spinner = findViewById(R.id.spinner_main);
         fabAddQS = findViewById(R.id.fab_add_qs);
-        searchView = findViewById(R.id.search);
+//        searchView = findViewById(R.id.search);
         swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
         pref = getSharedPreferences("shared", Context.MODE_PRIVATE);
         fabAddQS.setOnClickListener(this);
@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         recyclerView_qs_brief.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));//设置分隔线
         qsBriefAdapter = new QsBriefAdapter(MainActivity.this, questionViewList);
         recyclerView_qs_brief.setAdapter(qsBriefAdapter);
+
         //刷新问题概要
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -82,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        refreshQuestions(null, null);
+                        refreshQuestions(null, currMajor);
                     }
                 }).start();
             }
@@ -115,8 +116,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         super.onResume();
+        resetFabVisibleState();
         //刷新问题概要
-        refreshQuestions(null, null);
+        refreshQuestions(null, currMajor);
+    }
+
+    /**
+     * 重置添加按钮的可见状态
+     */
+    private void resetFabVisibleState(){
+        boolean login = pref.getBoolean("login", false);
+        String userType = pref.getString("usertype", "");
+        if(login && "教师用户".equals(userType)){
+            fabAddQS.setVisibility(View.GONE);
+        }else{
+            fabAddQS.setVisibility(View.VISIBLE);
+        }
     }
 
     //消息处理者,创建一个Handler的子类对象,目的是重写Handler的处理消息的方法(handleMessage())
@@ -249,9 +264,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     LoginActivity.actionStart(MainActivity.this);
                 }
                 break;
-            case R.id.setting:
-                SettingsActivity.actionStart(MainActivity.this);
-                break;
+            default:break;
+//            case R.id.setting:
+//                SettingsActivity.actionStart(MainActivity.this);
+//                break;
         }
         return true;
     }

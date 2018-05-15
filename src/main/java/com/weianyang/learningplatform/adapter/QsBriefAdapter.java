@@ -59,9 +59,6 @@ public class QsBriefAdapter extends RecyclerView.Adapter<QsBriefAdapter.ViewHold
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         QuestionView questionView = questionViewList.get(position);
-//        Log.d(TAG, "onBindViewHolder: question name is " + questionView.getQname());
-//        Log.d(TAG, "onBindViewHolder: question content is " + questionView.getQcontent());
-//        Log.d(TAG, "onBindViewHolder: question count is " + questionView.getCount());
         String str_qs_cnt_answers = questionView.getCount() + "个回答";
         holder.qs_brief_name.setText(questionView.getQname());
         holder.qs_content.setText(questionView.getQcontent());

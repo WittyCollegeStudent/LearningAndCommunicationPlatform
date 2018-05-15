@@ -8,8 +8,8 @@ import java.io.Serializable;
 
 public class QuestionView implements Serializable{
 
-    public static String FLAG_QUESTION = "QUESTION";
-    public static String FLAG_QUESTION_NAME = "QUESTION_NAME";
+    public static final String FLAG_QUESTION = "QUESTION";
+    public static final String FLAG_QUESTION_NAME = "QUESTION_NAME";
     public static final String VIEW_NAME = "QuestionView";
 
     private int id;//编号
@@ -20,13 +20,14 @@ public class QuestionView implements Serializable{
     private String isvisible;
     private String pubdate;//提出时间
     private int count;//问题总数
+    private int publisher_id;
 
-    public static String getFlagQuestion() {
-        return FLAG_QUESTION;
+    public int getPublisher_id() {
+        return publisher_id;
     }
 
-    public static void setFlagQuestion(String flagQuestion) {
-        FLAG_QUESTION = flagQuestion;
+    public void setPublisher_id(int publisher_id) {
+        this.publisher_id = publisher_id;
     }
 
     public int getId() {
@@ -116,7 +117,8 @@ public class QuestionView implements Serializable{
                 +",qcontent = " + qcontent
                 +",publisher = " + publisher
                 +",major = " + major
+                +",isVisible = " + isvisible
                 +",pubdate = " + pubdate
-                +",isVisible = " + isvisible;
+                +",pubdate = " + pubdate;
     }
 }

@@ -9,7 +9,7 @@ import android.content.Context;
 
 public class LCPApplication extends Application {
 
-    private static Context context;
+    private Context context;
 
     @Override
     public void onCreate() {

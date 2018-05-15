@@ -8,7 +8,7 @@ import com.squareup.okhttp.MediaType;
 
 public class HttpUtil {
     //  用来测试的本地服务器
-//    public static final String HOST = "http://qc7gks.natappfree.cc";
+//    public static final String HOST = "http://rgktgi.natappfree.cc";
     //  部署用服务器
     public static final String HOST = "http://193.112.70.161:8080/LcpServer";
     public static final String TAG = "HttpUtil";
@@ -17,6 +17,8 @@ public class HttpUtil {
     public static final String URL_ADD_QUESTION_SERVLET = HOST + "/addQuestionServlet";
     public static final String URL_ADD_ANSWER_SERVLET = HOST + "/addAnswerServlet";
     public static final String URL_LOGIN_SERVLET = HOST + "/loginServlet";
+    public static final String URL_DEL_ANSWER_SERVLET = HOST + "/delAnswerServlet";
+    public static final String URL_DEL_QUESTION_SERVLET = HOST + "/delQuestionServlet";
     public static final int GET_DATA_SUCCESS = 0x1;//从网络上获取数据成功
     public static final int GET_DATA_FAILURE = 0x2;//从网络上获取数据失败
 

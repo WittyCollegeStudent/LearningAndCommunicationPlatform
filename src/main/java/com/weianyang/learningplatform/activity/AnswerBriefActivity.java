@@ -175,6 +175,7 @@ public class AnswerBriefActivity extends AppCompatActivity implements View.OnCli
             case R.id.fab_add_answer:
                 AnswerAddActivity.actionStart(AnswerBriefActivity.this, curr_qs);
                 break;
+            default:break;
         }
     }
 }
